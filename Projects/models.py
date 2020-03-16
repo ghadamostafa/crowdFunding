@@ -60,6 +60,5 @@ class user_donations(models.Model):
 	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
 	Amount=models.IntegerField()
 	class Meta:
-		# index_together = ["user", "user"]
 		unique_together =['user','project']
 		db_table = "User_Donations"
