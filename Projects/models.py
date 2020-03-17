@@ -1,5 +1,6 @@
 from django.db import models
 from Users.models import Users
+from django.utils import timezone
 
 class Categories(models.Model):
 	name=models.CharField(max_length=100)
@@ -12,7 +13,6 @@ class Projects(models.Model):
 	start_date=models.DateField(auto_now=False, auto_now_add=False)
 	end_date=models.DateField(auto_now=False, auto_now_add=False)
 	report=models.IntegerField(null=True)
-	featured=models.BooleanField(null=True)
 	user=models.ForeignKey(Users,on_delete=models.CASCADE,related_name='UserID')
 	category=models.ForeignKey('Categories',on_delete=models.CASCADE)
 	tags = models.ManyToManyField('Tags',through='project_tags')
@@ -60,5 +60,12 @@ class user_donations(models.Model):
 	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
 	Amount=models.IntegerField()
 	class Meta:
+		# index_together = ["user", "project"]
 		unique_together =['user','project']
 		db_table = "User_Donations"
+
+class Featured_projects(models.Model):
+	featured=models.BooleanField()
+	featured_date=models.DateTimeField(default=timezone.now,auto_now=False, auto_now_add=False)
+	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
+
