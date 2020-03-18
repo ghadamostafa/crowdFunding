@@ -4,6 +4,8 @@ from django.utils import timezone
 
 class Categories(models.Model):
 	name=models.CharField(max_length=100)
+	def __str__(self):
+		return self.name
 	
 
 class Projects(models.Model):
@@ -19,6 +21,8 @@ class Projects(models.Model):
 	donations=models.ManyToManyField(Users, through='user_donations',related_name='UserDonations')
 	class Meta:
 		db_table = "Projects"
+	def __str__(self):
+		return self.Title
 	
 
 class Pictures(models.Model):
@@ -31,6 +35,8 @@ class Tags(models.Model):
 	name=models.CharField(max_length=255)
 	class Meta:
 		db_table = "Tags"
+	def __str__(self):
+		return self.name
 
 class Rates(models.Model):
 	rate=models.DecimalField(max_digits=2,decimal_places=1)
@@ -38,14 +44,18 @@ class Rates(models.Model):
 	user=models.ForeignKey(Users,on_delete=models.CASCADE)
 	class Meta:
 		db_table = "Project_Rates"
+	def __str__(self):
+		return self.rate
 
 class Comments(models.Model):
 	body=models.TextField()
-	report=models.IntegerField()
+	report=models.IntegerField(null=True)
 	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
 	user=models.ForeignKey(Users,on_delete=models.CASCADE)
 	class Meta:
 		db_table = "Project_Comments"
+	def __str__(self):
+		return self.body+" on "+self.project.Title
 
 class project_tags(models.Model):
 	tag=models.ForeignKey('Tags',on_delete=models.CASCADE)
@@ -68,4 +78,6 @@ class Featured_projects(models.Model):
 	featured=models.BooleanField()
 	featured_date=models.DateTimeField(default=timezone.now,auto_now=False, auto_now_add=False)
 	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
+	def __str__(self):
+		return self.project.Title
 

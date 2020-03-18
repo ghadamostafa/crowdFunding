@@ -9,6 +9,8 @@ class Users(models.Model):
 	Img=models.CharField(max_length=255)
 	class Meta:
 		db_table = "Users"
+	def __str__(self):
+		return self.first_name
 
 class User_optional_Info(models.Model):
 	BirthDate=models.DateField(auto_now=False, auto_now_add=False,null=True)
