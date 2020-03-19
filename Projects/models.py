@@ -45,7 +45,7 @@ class Rates(models.Model):
 	class Meta:
 		db_table = "Project_Rates"
 	def __str__(self):
-		return self.rate
+		return str(self.rate)+" on "+self.project.Title +" project"
 
 class Comments(models.Model):
 	body=models.TextField()
