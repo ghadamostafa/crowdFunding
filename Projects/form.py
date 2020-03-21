@@ -13,15 +13,15 @@ class ProjectForm(ModelForm):
         'id':'tags'
     }))
     max_target = forms.DecimalField(max_value=1000000)
-    start_date = forms.DateField(widget=forms.DateInput(attrs=
+    start_date = forms.DateField(required=False,widget=forms.DateInput(attrs=
                                 {
                                     'class':'date'
                                 }))
-    end_date = forms.DateField(widget=forms.DateInput(attrs=
+    end_date = forms.DateField(required=False,widget=forms.DateInput(attrs=
                                 {
                                     'class':'date'
                                 }))
-    cover = forms.ImageField()
+    cover = forms.ImageField(required=False)
 
     class Meta:
         model = Projects
@@ -31,7 +31,7 @@ class ProjectForm(ModelForm):
         ]
 
     class ImageForm(ModelForm):
-        image = forms.ImageField(label='Image')
+        image = forms.ImageField(required=False,label='Image')
 
         class Meta:
             model = Pictures

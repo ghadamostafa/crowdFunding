@@ -14,14 +14,14 @@ from django import forms
 #hyssien123
 #123
 
-def create_project(request):
+def create_project(request,id):
     ImageFormSet = modelformset_factory( Pictures , form=ProjectForm.ImageForm,extra=4)
     if request.method == 'POST':
-        form=ProjectForm(request.POST)
+        form=ProjectForm(request.POST or None)
         formset = ImageFormSet(request.POST,request.FILES,queryset = Pictures.objects.none())
         if form.is_valid() and formset.is_valid():
             project = form.save(commit = False)
-            project.user = request.user
+            project.user = id
             project.save()
             for form in formset.cleaned_data:
                 image = form['image']
