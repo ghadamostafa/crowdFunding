@@ -21,8 +21,8 @@ from Projects import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Users.urls')),
-    path('search/', views.search),
-    path('project/', include('Projects.urls')),
-    path('showproject/<int:id>', views.show_project),
-    path('addproject', views.create_project),
+    path('search/',views.search),
+    path('project/',include('Projects.urls')),
+    path('showproject/',views.show_project),
+    path('addproject/<int:id>',views.create_project),
 ]

@@ -5,7 +5,7 @@ class Users(models.Model):
 	last_name=models.CharField(max_length=50)
 	email=models.EmailField(editable=False)
 	password=models.CharField(max_length=255)
-	phone=models.IntegerField()
+	phone=models.CharField( max_length=11)
 	Img=models.CharField(max_length=255)
 	class Meta:
 		db_table = "Users"

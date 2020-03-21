@@ -32,9 +32,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'django_forms_bootstrap',
+    'crispy_forms',
     'bootstrap4',
     'taggit',
-    'Projects',
+    'Projects.apps.ProjectsConfig',
     'Users.apps.UsersConfig',
     'django.contrib.admin',
     'django.contrib.auth',
@@ -43,7 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 ]
-
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
