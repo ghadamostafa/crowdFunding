@@ -1,27 +1,26 @@
 from django.forms import ModelForm
-from .models import Projects, Pictures
+from .models import Projects, Pictures, Categories
 from django import forms
+
 from taggit.managers import TaggableManager
-categories=(
-    ("1","HealthCare"),
-    ("2","Sports"),
-    ("3","Innovation"),
-    ("4","Manufacturing"),
-    ("5","Agriculture"),
-)
 
 
 class ProjectForm(ModelForm):
-    title = forms.CharField(widget=forms.TextInput(
-        attrs = {
-            'class':'form-control'
-    }))
+    title = forms.CharField(widget=forms.TextInput())
     Details = forms.Textarea()
-    category = forms.ChoiceField(choices=categories)
-    tags = TaggableManager()
+    category = forms.ModelChoiceField(queryset=Categories.objects.all())
+    tags = forms.CharField(widget=forms.TextInput(attrs={
+        'id':'tags'
+    }))
     max_target = forms.DecimalField(max_value=1000000)
-    start_date = forms.DateField(widget=forms.DateInput)
-    end_date = forms.DateField(widget=forms.DateInput)
+    start_date = forms.DateField(widget=forms.DateInput(attrs=
+                                {
+                                    'class':'date'
+                                }))
+    end_date = forms.DateField(widget=forms.DateInput(attrs=
+                                {
+                                    'class':'date'
+                                }))
     cover = forms.ImageField()
 
     class Meta:
@@ -31,9 +30,12 @@ class ProjectForm(ModelForm):
             ,'start_date','end_date','cover'
         ]
 
-class ImageForm(ModelForm):
-    image = forms.ImageField(label = 'Image')
+    class ImageForm(ModelForm):
+        image = forms.ImageField(label='Image')
 
-    class Meta:
-        model=Pictures
-        fields = ['image']
+        class Meta:
+            model = Pictures
+            fields = ['image']
+
+
+

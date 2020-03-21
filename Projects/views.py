@@ -5,7 +5,8 @@ from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from Projects.models import Pictures,Projects
-from Projects.form import ProjectForm, ImageForm
+from Projects.form import ProjectForm
+from .models import Categories
 from taggit.models import Tag
 from django import forms
 
@@ -14,10 +15,10 @@ from django import forms
 #123
 
 def create_project(request):
-    ImageFormSet = modelformset_factory( Pictures , form=ImageForm,extra=4)
+    ImageFormSet = modelformset_factory( Pictures , form=ProjectForm.ImageForm,extra=4)
     if request.method == 'POST':
         form=ProjectForm(request.POST)
-        formset = ImageFormSet(request.POST,request.FILES,queryset = Pictures.ordering)
+        formset = ImageFormSet(request.POST,request.FILES,queryset = Pictures.objects.none())
         if form.is_valid() and formset.is_valid():
             project = form.save(commit = False)
             project.user = request.user

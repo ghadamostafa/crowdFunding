@@ -3,6 +3,7 @@ from Users.models import Users
 from django.utils import timezone
 
 class Categories(models.Model):
+	id = models.AutoField(primary_key=True)
 	name=models.CharField(max_length=100)
 	def __str__(self):
 		return self.name
@@ -16,7 +17,7 @@ class Projects(models.Model):
 	end_date=models.DateField(auto_now=False, auto_now_add=False)
 	report=models.IntegerField(null=True)
 	user=models.ForeignKey(Users,on_delete=models.CASCADE,related_name='UserID')
-	category=models.ForeignKey('Categories',on_delete=models.CASCADE)
+	category=models.ForeignKey('Categories',on_delete=models.CASCADE,null=True)
 	tags = models.ManyToManyField('Tags',through='project_tags')
 	donations=models.ManyToManyField(Users, through='user_donations',related_name='UserDonations')
 	class Meta:
@@ -33,14 +34,13 @@ class Pictures(models.Model):
 								)
 	image=models.ImageField(upload_to='images/projects',verbose_name="image",null=True)
 	user_id=models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
-	project_Id=models.ForeignKey(Projects, on_delete=models.CASCADE,null=True)
 	def __str__(self):
 		return self.id
 	class Meta:
 		db_table = "Project_Pictures"
 
 class Tags(models.Model):
-	name=models.CharField(max_length=255)
+	name=models.CharField(max_length=255,null=True)
 	class Meta:
 		db_table = "Tags"
 	def __str__(self):
