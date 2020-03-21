@@ -1,0 +1,36 @@
+{% extends "Users/layout.html" %}
+{% load static %}
+{% block content%}
+	{% if result %}
+	<!-- <div>
+		<ul>
+			{% for i in result %}
+			<
+			<li>{{ i.target }}</li>
+			{% endfor %}
+		</ul>
+	</div> -->
+	<section style="margin-top: 100px;margin-left: 230px;" >
+	  <h2 style="text-align: left;margin-top:  100px;" >Results</h2>
+	  <div class="container" >
+		{% for i in result %}
+		    {% if forloop.first %}<div class="row">{% endif %}
+		    <div class="col-lg-3 card" style="margin-top: 20px;margin-right: 30px;">
+		    		<img class="card-img-top" src="{% static 'Users/images/photo.png' %}" alt="Card image cap">
+		    		<div class="card-body">
+			          <a href="/project/{{ i.id }}">{{ i.Title }}</a>
+			          <p class="card-text">{{ i.Details }}</p>
+			          <p>Target: {{ i.target }} EGP</p>
+			        </div>
+		    </div>
+		    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}
+		    {% if forloop.last %}</div>{% endif %}
+		{% endfor %}
+		</div>
+	</section>
+	{% else %}
+		<div style="text-align: center;margin-top: 20px;">
+			<h5>Result not found</h5>
+		</div>
+	{% endif %}
+{% endblock %}
