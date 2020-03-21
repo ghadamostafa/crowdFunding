@@ -31,6 +31,8 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'bootstrap4',
+    'taggit',
     'Projects',
     'Users',
     'django.contrib.admin',
@@ -56,7 +58,7 @@ ROOT_URLCONF = 'CrowdFunding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,9 +82,9 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'Crowd_Funding',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '#Number1',
         'HOST': 'localhost',
-        'PORT': '3308',
+        'PORT': '3306',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }

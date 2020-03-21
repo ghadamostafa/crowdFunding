@@ -5,3 +5,4 @@ admin.site.register(Categories)
 admin.site.register(Projects)
 admin.site.register(Comments)
 admin.site.register(Featured_projects)
+

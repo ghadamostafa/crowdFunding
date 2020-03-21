@@ -1,0 +1,13 @@
+<form method="POST">
+    {% csrf_token %}
+    {% load bootstrap4 %}
+<!--    {{projectForm}}-->
+    {% for field in projectForm  %}
+      <div class="col-sm-6">
+        <b>{{ field.label_tag }}</b> - {{ field }}
+      </div>
+    {% endfor %}
+    <button type="submit">
+        add
+    </button>
+</form>
