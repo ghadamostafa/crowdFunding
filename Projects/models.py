@@ -18,7 +18,7 @@ class Projects(models.Model):
 	user=models.ForeignKey(Users,on_delete=models.CASCADE,related_name='UserID')
 	category=models.ForeignKey('Categories',on_delete=models.CASCADE)
 	tags = models.ManyToManyField('Tags',through='project_tags')
-	donations=models.ManyToManyField(Users, through='user_donations',related_name='UserDonations')
+	donations=models.ManyToManyField(Users, through='user_donations',related_name='UserDonations',null=True)
 	class Meta:
 		db_table = "Projects"
 	def __str__(self):
@@ -26,8 +26,16 @@ class Projects(models.Model):
 	
 
 class Pictures(models.Model):
-	Path=models.CharField(max_length=255)
-	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
+	id=models.AutoField(primary_key=True)
+	project = models.ForeignKey(Projects, related_name='Images_project',
+								on_delete=models.CASCADE,
+								null=True
+								)
+	image=models.ImageField(upload_to='images/projects',verbose_name="image",null=True)
+	user_id=models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+	# project_Id=models.ForeignKey(Projects, on_delete=models.CASCADE,null=True)
+	def __str__(self):
+		return self.id
 	class Meta:
 		db_table = "Project_Pictures"
 

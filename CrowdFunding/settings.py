@@ -31,6 +31,9 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django_forms_bootstrap',
+    'bootstrap4',
+    'taggit',
     'Projects',
     'Users.apps.UsersConfig',
     'django.contrib.admin',
@@ -56,7 +59,7 @@ ROOT_URLCONF = 'CrowdFunding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': ['templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

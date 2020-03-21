@@ -23,4 +23,6 @@ urlpatterns = [
     path('', include('Users.urls')),
     path('search/', views.search),
     path('project/', include('Projects.urls')),
+    path('showproject/<int:id>', views.show_project),
+    path('addproject', views.create_project),
 ]
