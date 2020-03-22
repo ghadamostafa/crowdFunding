@@ -29,10 +29,7 @@ class Projects(models.Model):
 
 class Pictures(models.Model):
 	id=models.AutoField(primary_key=True)
-	project = models.ForeignKey(Projects, related_name='Images_project',
-								on_delete=models.CASCADE,
-								null=True
-								)
+	project = models.ForeignKey(Projects,on_delete=models.CASCADE,null=True)
 	image=models.ImageField(upload_to='images/projects',verbose_name="image",null=True)
 	user_id=models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
 	# project_Id=models.ForeignKey(Projects, on_delete=models.CASCADE,null=True)

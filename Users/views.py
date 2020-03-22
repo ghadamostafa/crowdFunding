@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from Projects.models import Rates,Featured_projects
 
+
 # dic[]
 def home(request):
 	#highest 5 rated projects
@@ -15,12 +16,6 @@ def home(request):
 
 	#list of categories
 
-	# dic={}
-	# for i in result:
-	# 	dic['id']=i.project_id
-	# 	dic['title']=i.title
-	# 	dic['pic']=i.project.pictures_set.all()
-	# return HttpResponse("dic")
 	return render(request,"Users/index.html",{"result":result,"featuredProjects":featuredProjects})
 
 	

@@ -2,7 +2,8 @@
 {% load static %}
 {% block content%}
 
- 
+
+
 <!-- highest 5 rated projects slider -->
   <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
     <ol class="carousel-indicators">
@@ -16,7 +17,10 @@
       <!-- project1 -->
       {% for item in result %}
         <div class="carousel-item {% if forloop.first %} active {% endif %}">
-        <a href="/project/{{ item.project_id }}"><img class="d-block w-100" src="{% static 'Users/images/photo.png' %}" ></a>
+          {% with item.project.pictures_set.all|first as imageobj %}
+        <a href="/project/{{ item.project_id }}">
+          <img class="d-block w-100" src="{% if imageobj.image %}{{ imageobj.image.url }}{% endif %}" ></a>
+          {% endwith %}
         <div class="carousel-caption d-none d-md-block">
           <h5>{{ item.title }}</h5>
           <p>...</p>
@@ -63,7 +67,10 @@
       {% for p in featuredProjects %}
       <h1></h1>
       <div class="col card" >
-        <img class="card-img-top" src="{% static 'Users/images/photo.png' %}" alt="Card image cap">
+        {% with p.project.pictures_set.all|first as imageobj %}
+        <img class="card-img-top" 
+        src="{% if imageobj.image %}{{ imageobj.image.url }}{% endif %}" alt="Card image cap">
+        {% endwith %}
         <div class="card-body">
           <a href="/project/{{ p.project_id }}">{{ p.project.Title }}</a>
           <p class="card-text">{{ p.project.Details }}</p>
