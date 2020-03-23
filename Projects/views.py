@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from Users.models import Users
 from django.http import HttpResponse,HttpResponseRedirect
-from Projects.models import Projects,Tags,Pictures, Rates
+from Projects.models import Projects,Tags,Pictures, Rates,project_tags
 from .models import Categories
 from django.db.models import Q
 from taggit.models import Tag
@@ -131,8 +131,10 @@ def create_project(request,id):
             project = form.save(commit = False)
             project.user = Users.objects.get(id=id)
             project.save()
+            tag=Tags.objects.create(name=form.cleaned_data.get('tags'))
+            ProjectTags=project_tags.objects.create(tag=tag,project=project)
             for f in formset.cleaned_data:
-                image = f['image']
+                image = f.get('image')
                 photo = Pictures(project = project,image = image)
                 photo.save()
             form.save_m2m()

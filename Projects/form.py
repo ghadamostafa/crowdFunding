@@ -25,11 +25,11 @@ class ProjectCreationForm(ModelForm):
     class Meta:
         model = Projects
         fields = [
-            'Title','Details','category','tags','target'
+            'Title','Details','category','target'
             ,'start_date','end_date'
         ]
 class ImageForm(ModelForm):
-        image = forms.ImageField(required=False,label='Image')
-        class Meta:
-            model = Pictures
-            fields = ['image']
+    image = forms.ImageField(required=False,label='image')
+    class Meta:
+        model = Pictures
+        fields = ['image']
