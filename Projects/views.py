@@ -139,7 +139,7 @@ def create_project(request,id):
                 photo.save()
             form.save_m2m()
             messages.success(request,"project saved")
-            return HttpResponse("success")
+            return HttpResponse("Welcome")
         else:
             print(form.errors,formset.errors)
     else:
