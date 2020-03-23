@@ -11,12 +11,12 @@ def home(request):
 
 	#latest 5 featured projects
 	featuredProjects=Featured_projects.objects.all().order_by('-featured_date')[:5]
-	
+
 	#latest 5 projects
 
 	#list of categories
 
-	return render(request,"Users/index.html",{"result":result,"featuredProjects":featuredProjects})
+	return render(request, "Users/index.html", {"result":result,"featuredProjects":featuredProjects})
 
 	
 def register(request):

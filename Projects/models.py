@@ -8,18 +8,17 @@ class Categories(models.Model):
 	name=models.CharField(max_length=100)
 	def __str__(self):
 		return self.name
-	
 
 class Projects(models.Model):
 	Title=models.CharField(max_length=100)
 	Details=models.TextField()
 	target=models.IntegerField()
-	start_date=models.DateField(default='2020-03-21')
-	end_date=models.DateField(default='2020-03-21')
+	start_date=models.DateField(auto_now=False, auto_now_add=False , default=timezone.now)
+	end_date=models.DateField(auto_now=False, auto_now_add=False)
 	report=models.IntegerField(null=True)
 	user=models.ForeignKey(Users,on_delete=models.CASCADE,related_name='UserID')
-	category=models.ForeignKey('Categories',on_delete=models.CASCADE,null=True)
-	tags = models.ManyToManyField('Tags',through='project_tags')
+	category=models.ForeignKey('Categories', on_delete=models.CASCADE,null=True)
+	tags = models.ManyToManyField('Tags', through='project_tags')
 	donations=models.ManyToManyField(Users, through='user_donations',related_name='UserDonations')
 	class Meta:
 		db_table = "Projects"

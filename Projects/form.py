@@ -13,13 +13,13 @@ class ProjectForm(ModelForm):
         'id':'tags'
     }))
     target = forms.DecimalField(max_value=1000000)
-    start_date = forms.DateField(required=False,widget=forms.DateInput(attrs=
+    start_date = forms.DateField(required=False, widget=forms.DateInput(attrs=
                                 {
                                     'class':'date'
                                 }))
-    end_date = forms.DateField(required=False,widget=forms.DateInput(attrs=
+    end_date = forms.DateField(required=False, widget=forms.DateInput(attrs=
                                 {
-                                    'class':'date'
+                                    'class': 'date'
                                 }))
 
     class Meta:
