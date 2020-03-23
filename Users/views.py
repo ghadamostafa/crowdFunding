@@ -12,6 +12,7 @@ def home(request):
 	#latest 5 featured projects
 	featuredProjects=Featured_projects.objects.all().order_by('-featured_date')[:5]
 	print(featuredProjects)
+	print(result)
 	#latest 5 projects
 
 	#list of categories
