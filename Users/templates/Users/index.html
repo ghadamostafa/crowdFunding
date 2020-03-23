@@ -1,0 +1,100 @@
+{% extends "Users/layout.html" %}
+{% load static %}
+{% block content%}
+
+
+
+<!-- highest 5 rated projects slider -->
+  <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+    <ol class="carousel-indicators">
+      <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="3"></li>
+      <li data-target="#carouselExampleIndicators" data-slide-to="4"></li>
+    </ol>
+    <div class="carousel-inner" >
+      <!-- project1 -->
+      {% for item in result %}
+        <div class="carousel-item {% if forloop.first %} active {% endif %}">
+          {% with item.project.pictures_set.all|first as imageobj %}
+        <a href="/project/{{ item.project_id }}">
+          <img class="d-block w-100" src="{% if imageobj.image %}{{ imageobj.image.url }}{% endif %}" ></a>
+          {% endwith %}
+        <div class="carousel-caption d-none d-md-block">
+          <h5>{{ item.title }}</h5>
+          <p>...</p>
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+    <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="sr-only">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="sr-only">Next</span>
+    </a>
+  </div>
+<!-- End of slider -->
+<!-- latest 5 projects -->
+<section style="margin-top: 64px;" >
+  <h2 style="text-align: left;margin: 20px 100px;" >Latest Projects</h2>
+  <div class="container">
+    <div class="row">
+      <!-- project 1 -->
+      <div class="col card" >
+       <!-- <div class="card" style="width: 18rem;"> -->
+        <img class="card-img-top" src="{% static 'Users/images/photo.png' %}" alt="Card image cap">
+        <div class="card-body">
+          <p class="card-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
+        </div>
+      <!-- </div> -->
+      </div>
+      
+  </div>
+</div>
+</section>
+<!-- End latest projects -->
+<!-- latest 5 featured projects -->
+<section style="margin-top: 100px;" >
+  <h2 style="text-align: left;margin: 20px 100px;" >Latest Featured Projects</h2>
+  <div class="container">
+    <div class="row">
+      <!-- project  -->
+      {% for p in featuredProjects %}
+      <h1></h1>
+      <div class="col card" >
+        {% with p.project.pictures_set.all|first as imageobj %}
+        <img class="card-img-top" 
+        src="{% if imageobj.image %}{{ imageobj.image.url }}{% endif %}" alt="Card image cap">
+        {% endwith %}
+        <div class="card-body">
+          <a href="/project/{{ p.project_id }}">{{ p.project.Title }}</a>
+          <p class="card-text">{{ p.project.Details }}</p>
+          <p>Target: {{ p.project.target }} EGP</p>
+        </div>
+      </div>
+      {% endfor %}
+     
+  </div>
+</div>
+</section>
+<!-- End latest featured projects -->
+
+<!-- categories list -->
+<section style="margin:150px 100px;width: 1130px;">
+  <div class="list-group">
+    <a href="#" class="list-group-item list-group-item-action active disabled">
+      Categories
+    </a>
+    <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
+    <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
+    <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
+    <a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a>
+  </div>
+</section>
+<!-- end categories list -->
+{% endblock %}

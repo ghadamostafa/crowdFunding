@@ -7,6 +7,7 @@ class ProjectForm(forms.ModelForm):
         model = Projects
         fields = ['Title', 'Details', 'id', 'target', 'end_date']
 
+
 class DonationForm(forms.ModelForm):
     class Meta:
         model = user_donations
@@ -17,6 +18,7 @@ class DonationForm(forms.ModelForm):
             return self.instance.sku
         else:
             return self.fields['sku']
+
 
 class RatingForm(forms.ModelForm):
     class Meta:

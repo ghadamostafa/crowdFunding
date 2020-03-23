@@ -5,8 +5,8 @@ class Users(models.Model):
 	last_name=models.CharField(max_length=50)
 	email=models.EmailField(editable=False)
 	password=models.CharField(max_length=255)
-	phone=models.IntegerField()
-	Img=models.CharField(max_length=255)
+	phone=models.CharField( max_length=11)
+	Img=models.ImageField(upload_to='images/users',verbose_name="image",null=True)
 	class Meta:
 		db_table = "Users"
 	def __str__(self):

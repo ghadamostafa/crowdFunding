@@ -1,14 +1,21 @@
-from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
-
-from .models import Projects, Pictures, Rates
-from Users.models import Users
 # connect  view with form
 from .forms import ProjectForm, DonationForm, RatingForm
 import json
 from django.db.models import Sum
 from django.db import IntegrityError
+from django import forms
+from django.forms.models import modelformset_factory
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from Users.models import Users
+from django.http import HttpResponse,HttpResponseRedirect
+from Projects.models import Projects,Tags,Pictures, Rates
+from .models import Categories
+from django.db.models import Q
+from taggit.models import Tag
+
 
 
 def project_details(request, id):
@@ -20,7 +27,7 @@ def project_details(request, id):
     pictures=Pictures.objects.filter(project=id)
     context = {
         "project_details": project_details,
-        "project_picture": pictures,
+        "project_picture": Pictures,
         "range": range(5),
         "user_id": request.session['user_id'],
 
@@ -99,3 +106,43 @@ def save(request):
         'avg': avg,
     }
     return render(request, "project_details.html", context)
+
+
+def search(request):
+	l=[]
+	value=request.GET['searchFor']
+	titleSearch = Projects.objects.filter(Q(Title__icontains=value))
+	tagSearch=Tags.objects.filter(Q(name__icontains=value ))
+	for item in tagSearch:
+		projects=item.project_tags_set.all()
+		for p in projects:
+			l.append(p.project)
+	# Tags.objects.filter(Q(name__icontains='physics' ))[0].project_tags_set.all()[0].project.Title
+	res=set(l+list(titleSearch))
+	return render(request, "Users/SearchResult.html",{"result":res})
+
+def create_project(request,id):
+    ImageFormSet = modelformset_factory( Pictures , form=ProjectForm.ImageForm,extra=4)
+    if request.method == 'POST':
+        form=ProjectForm(request.POST or None)
+        formset = ImageFormSet(request.POST,request.FILES,queryset = Pictures.objects.none())
+        if form.is_valid() and formset.is_valid():
+            project = form.save(commit = False)
+            project.user = Users.objects.get(id=id)
+            project.save()
+            for f in formset.cleaned_data:
+                image = f['name']
+                photo = Pictures(project = project,image = image)
+                photo.save()
+            form.save_m2m()
+            messages.success(request,"project saved")
+            return HttpResponse("success")
+        else:
+            print(form.errors,formset.errors)
+    else:
+        form = ProjectForm()
+        formset = ImageFormSet(queryset=Pictures.objects.none())
+    return render(request, 'add_project.html',
+                  {'projectForm':form,'formset':formset},
+                  )
+
