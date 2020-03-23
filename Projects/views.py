@@ -16,6 +16,8 @@ from Projects.models import Projects, Tags, Pictures, Rates, user_donations,proj
 from .models import Categories
 from django.db.models import Q
 from taggit.models import Tag
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 def project_details(request, id):
@@ -88,7 +90,7 @@ def donate(request, id):
         }
         return render(request, "donation.html", context)
 
-
+@csrf_exempt
 def save(request):
     print("this sa ve rate method")
     #uid = request.session['user_id']  # uid referes to the session user_id
@@ -106,8 +108,9 @@ def save(request):
         u.save()
     else:
         Rates.objects.filter(user=uID).update(rate=ratedindex)
-    return HttpResponse(json.dumps({'uid': 2}), content_type="application/json")
-    num_of_rates = Rates.objects.get(id).count()
+    # return HttpResponse(json.dumps({'uid': 2}), content_type="application/json")
+    return JsonResponse({'uid':2})
+    # num_of_rates = Rates.objects.get(id).count()
 
     # total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
     # avg = total / num_of_rates

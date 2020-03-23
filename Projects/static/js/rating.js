@@ -1,6 +1,8 @@
         var ratedIndex = -1, uID = 0;
 
         $(document).ready(function () {
+            
+
             resetStarColors();
 
             if (localStorage.getItem('ratedIndex') != null) {
@@ -29,12 +31,24 @@
         });
 
         function saveToTheDB() {
+            var csrftoken = $.cookie('csrftoken');
+            function csrfSafeMethod(method) {
+                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+            }
+            $.ajaxSetup({
+                beforeSend: function(xhr, settings) {
+                    if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                        xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                    }
+                }
+            });
             $.ajax({
-               url: "project/save",
+               url: "/project/save",
                method: 'POST',
                data: {
-                   uID: uID,
-                   ratedIndex: ratedIndex
+                  // 'csrfmiddlewaretoken': "{% csrf_token %}",
+                  'uID': uID,
+                  'ratedIndex': ratedIndex
                },
                success: function (r) {
                     uID = r.id;
