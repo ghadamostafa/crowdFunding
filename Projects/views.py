@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 # connect  view with form
 from .forms import ProjectForm, DonationForm, RatingForm
+from .form import ImageForm,ProjectCreationForm
 import json
 from django.db.models import Sum
 from django.db import IntegrityError
@@ -11,14 +12,14 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from Users.models import Users
 from django.http import HttpResponse, HttpResponseRedirect
-from Projects.models import Projects, Tags, Pictures, Rates, user_donations
+from Projects.models import Projects, Tags, Pictures, Rates, user_donations,project_tags
 from .models import Categories
 from django.db.models import Q
 from taggit.models import Tag
 
 
 def project_details(request, id):
-    request.session['user_id'] = 2  # static ,change it to dynamic when merge
+    request.session['user_id'] = 3  # static ,change it to dynamic when merge
     print("****")
     request.session['project_id'] = id
     project_details = Projects.objects.get(id=id)
@@ -29,7 +30,6 @@ def project_details(request, id):
     context = {
         "project_details": project_details,
         "project_picture": pictures,
-        "range": range(5),
         "user_id": request.session['user_id'],
 
     }
@@ -68,7 +68,6 @@ def donate(request, id):
             if form.is_valid():
                 new_form = form.save(commit=False)
                 new_form.user = user
-                # new_form.project = Projects.id
                 new_form.save()
         else:
             form = DonationForm(initial={'project': project, 'user': user})
@@ -92,11 +91,10 @@ def donate(request, id):
 
 def save(request):
     print("this sa ve rate method")
-    uid = request.session['user_id']  # uid referes to the session user_id
-    pid = request.session.get('project_id')
-    p = Projects.objects.get(id=pid)
-    x = Projects.objects.get(id=uid)
-
+    #uid = request.session['user_id']  # uid referes to the session user_id
+    #pid = request.session.get('project_id')
+    p = Projects.objects.get(id=2)
+    x = Projects.objects.get(id=2)
     ratedindex = request.POST.get('ratedIndex')
     print(ratedindex)
     uID = request.POST.get('user_id')  # uID refers to the local storage user_id
@@ -108,44 +106,45 @@ def save(request):
         u.save()
     else:
         Rates.objects.filter(user=uID).update(rate=ratedindex)
-    return HttpResponse(json.dumps({'uid': uid}), content_type="application/json")
+    return HttpResponse(json.dumps({'uid': 2}), content_type="application/json")
     num_of_rates = Rates.objects.get(id).count()
 
-    total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
-    avg = total / num_of_rates
-    print(avg)
-    context = {
-        'avg': avg,
-    }
-    return render(request, "project_details.html", context)
+    # total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
+    # avg = total / num_of_rates
+    # print(avg)
+    # context = {
+    #     'avg': avg,
+    # }
+    # return render(request, "project_details.html", context)
 
 
 def search(request):
-    l = []
-    value = request.GET['searchFor']
-    titleSearch = Projects.objects.filter(Q(Title__icontains=value))
-    tagSearch = Tags.objects.filter(Q(name__icontains=value))
-    for item in tagSearch:
-        projects = item.project_tags_set.all()
-        for p in projects:
-            l.append(p.project)
-    # Tags.objects.filter(Q(name__icontains='physics' ))[0].project_tags_set.all()[0].project.Title
-    res = set(l + list(titleSearch))
-    return render(request, "Users/SearchResult.html", {"result": res})
+	l=[]
+	value=request.GET['searchFor']
+	titleSearch = Projects.objects.filter(Q(Title__icontains=value))
+	tagSearch=Tags.objects.filter(Q(name__icontains=value ))
+	for item in tagSearch:
+		projects=item.project_tags_set.all()
+		for p in projects:
+			l.append(p.project)
+	# Tags.objects.filter(Q(name__icontains='physics' ))[0].project_tags_set.all()[0].project.Title
+	res=set(l+list(titleSearch))
+	return render(request, "Users/SearchResult.html",{"result":res})
 
-
-def create_project(request, id):
-    ImageFormSet = modelformset_factory(Pictures, form=ProjectForm.ImageForm, extra=4)
+def create_project(request,id):
+    ImageFormSet = modelformset_factory( Pictures , form=ImageForm,extra=4)
     if request.method == 'POST':
-        form = ProjectForm(request.POST or None)
-        formset = ImageFormSet(request.POST, request.FILES, queryset=Pictures.objects.none())
+        form=ProjectCreationForm(request.POST or None)
+        formset = ImageFormSet(request.POST,request.FILES,queryset = Pictures.objects.none())
         if form.is_valid() and formset.is_valid():
             project = form.save(commit=False)
             project.user = Users.objects.get(id=id)
             project.save()
+            tag=Tags.objects.create(name=form.cleaned_data.get('tags'))
+            ProjectTags=project_tags.objects.create(tag=tag,project=project)
             for f in formset.cleaned_data:
-                image = f['name']
-                photo = Pictures(project=project, image=image)
+                image = f.get('image')
+                photo = Pictures(project = project,image = image)
                 photo.save()
             form.save_m2m()
             messages.success(request, "project saved")
@@ -153,7 +152,7 @@ def create_project(request, id):
         else:
             print(form.errors, formset.errors)
     else:
-        form = ProjectForm()
+        form = ProjectCreationForm()
         formset = ImageFormSet(queryset=Pictures.objects.none())
     return render(request, 'add_project.html',
                   {'projectForm': form, 'formset': formset},

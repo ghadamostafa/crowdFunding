@@ -3,10 +3,10 @@ from django.db import models
 class Users(models.Model):
 	first_name=models.CharField(max_length=50)
 	last_name=models.CharField(max_length=50)
-	email=models.EmailField(editable=False)
+	email=models.EmailField()
 	password=models.CharField(max_length=255)
 	phone=models.CharField( max_length=11)
-	Img=models.ImageField(upload_to='images/users',verbose_name="image",null=True)
+	Img=models.ImageField(upload_to='images/Users', null=True, blank=True)
 	class Meta:
 		db_table = "Users"
 	def __str__(self):

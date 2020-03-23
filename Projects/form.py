@@ -4,7 +4,7 @@ from django import forms
 from taggit.managers import TaggableManager
 
 
-class ProjectForm(ModelForm):
+class ProjectCreationForm(ModelForm):
     Title = forms.CharField(widget=forms.TextInput())
     Details = forms.Textarea()
     category = forms.ModelChoiceField(queryset=Categories.objects.all())
@@ -25,11 +25,11 @@ class ProjectForm(ModelForm):
     class Meta:
         model = Projects
         fields = [
-            'Title','Details','category','tags','target'
+            'Title','Details','category','target'
             ,'start_date','end_date'
         ]
 class ImageForm(ModelForm):
-        image = forms.ImageField(required=False,label='Image')
-        class Meta:
-            model = Pictures
-            fields = ['image']
+    image = forms.ImageField(required=False,label='image')
+    class Meta:
+        model = Pictures
+        fields = ['image']
