@@ -4,7 +4,7 @@ from django import forms
 from taggit.managers import TaggableManager
 
 
-class ProjectForm(ModelForm):
+class ProjectCreationForm(ModelForm):
     Title = forms.CharField(widget=forms.TextInput())
     Details = forms.Textarea()
     category = forms.ModelChoiceField(queryset=Categories.objects.all())

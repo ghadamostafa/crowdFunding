@@ -24,7 +24,7 @@ SECRET_KEY = '0^v(*9*n%p1$#dr=&$zrl%17o4j)23no^h)&s4-_n_1cljx-xr'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 

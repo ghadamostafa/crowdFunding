@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 # connect  view with form
 from .forms import ProjectForm, DonationForm, RatingForm
+from .form import ImageForm,ProjectCreationForm
 import json
 from django.db.models import Sum
 from django.db import IntegrityError
@@ -122,16 +123,16 @@ def search(request):
 	return render(request, "Users/SearchResult.html",{"result":res})
 
 def create_project(request,id):
-    ImageFormSet = modelformset_factory( Pictures , form=ProjectForm.ImageForm,extra=4)
+    ImageFormSet = modelformset_factory( Pictures , form=ImageForm,extra=4)
     if request.method == 'POST':
-        form=ProjectForm(request.POST or None)
+        form=ProjectCreationForm(request.POST or None)
         formset = ImageFormSet(request.POST,request.FILES,queryset = Pictures.objects.none())
         if form.is_valid() and formset.is_valid():
             project = form.save(commit = False)
             project.user = Users.objects.get(id=id)
             project.save()
             for f in formset.cleaned_data:
-                image = f['name']
+                image = f['image']
                 photo = Pictures(project = project,image = image)
                 photo.save()
             form.save_m2m()
@@ -140,7 +141,7 @@ def create_project(request,id):
         else:
             print(form.errors,formset.errors)
     else:
-        form = ProjectForm()
+        form = ProjectCreationForm()
         formset = ImageFormSet(queryset=Pictures.objects.none())
     return render(request, 'add_project.html',
                   {'projectForm':form,'formset':formset},
