@@ -1,4 +1,5 @@
 from django.contrib import admin
+
 from django.contrib.auth import views as auth_views
 from django.urls import path,include
 from Users import views as user_view
@@ -9,8 +10,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('project/', include('Projects.urls', namespace="home"))
-    # i can remove the "project/" to get into with out writing /project in url
     path('project/', include('Projects.urls', namespace='Projects')),
     path('', include('Users.urls')),
     path('search/',project_view.search),

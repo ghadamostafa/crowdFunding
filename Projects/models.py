@@ -29,8 +29,8 @@ class Projects(models.Model):
 class Pictures(models.Model):
 	id=models.AutoField(primary_key=True)
 	project = models.ForeignKey(Projects,on_delete=models.CASCADE,null=True)
-	image=models.ImageField(upload_to='images/projects',verbose_name="image",null=True)
-	user_id=models.ForeignKey(Users,on_delete=models.CASCADE,null=True)
+	image=models.ImageField(upload_to='media/images/projects',verbose_name="image",null=True)
+	user_id=models.ForeignKey(Users, on_delete=models.CASCADE,null=True)
 	# project_Id=models.ForeignKey(Projects, on_delete=models.CASCADE,null=True)
 	
 	class Meta:
@@ -38,7 +38,7 @@ class Pictures(models.Model):
 
 
 class Tags(models.Model):
-	name=models.CharField(max_length=255,null=True)
+	name=models.CharField(max_length=255, null=True)
 	class Meta:
 		db_table = "Tags"
 	def __str__(self):
@@ -67,20 +67,20 @@ class Comments(models.Model):
 
 
 class project_tags(models.Model):
-	tag=models.ForeignKey('Tags',on_delete=models.CASCADE)
-	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
+	tag=models.ForeignKey('Tags', on_delete=models.CASCADE)
+	project=models.ForeignKey('Projects', on_delete=models.CASCADE)
 	class Meta:
 		unique_together =['tag','project']
 		db_table = "project_tags"
 
 
 class user_donations(models.Model):
-	user=models.ForeignKey(Users,on_delete=models.CASCADE)
-	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
-	Amount=models.IntegerField()
+	user =models.ForeignKey(Users,on_delete=models.CASCADE)
+	project =models.ForeignKey('Projects',on_delete=models.CASCADE)
+	Amount =models.IntegerField()
 	class Meta:
 		# index_together = ["user", "project"]
-		unique_together =['user','project']
+		unique_together =['user', 'project']
 		db_table = "User_Donations"
 
 

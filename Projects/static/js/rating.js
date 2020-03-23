@@ -30,9 +30,8 @@
 
         function saveToTheDB() {
             $.ajax({
-               url: "http://127.0.0.1:8000/project/save",
+               url: "project/save",
                method: 'POST',
-               dataType: 'json',
                data: {
                    uID: uID,
                    ratedIndex: ratedIndex
