@@ -89,13 +89,24 @@
 
     </form>
     {% endif %}
-    </divalig>
-</div>
-    <div id="similar">
-
-
     </div>
 
+    <!--***************************************************************************-->
+    <div id="similar"class = "card-body" align="center" style="margin:10px auto;width:100%;">
+        <h2 style="font-family:monospace;background-color:pink;color:blue;">Similar Projects</h2>
+        {% for project in similar_project %}
+            <h3 class="card-title" style="color:navy">
+               {{project.Title}}
+            </h3>
+            <p class="card-text">{{project.Details|truncatewords:10}}</p>
+            <a href="{% url 'Projects:project_details' project.id %}">Know more</a>
+
+        {% endfor %}
+
+    </div>
+</div>
+
+    <!--***************************************************************************-->
     <script src="http://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
     <script src="{% static 'js/rating.js' %}"></script>
 {% endblock %}

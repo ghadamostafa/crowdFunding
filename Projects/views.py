@@ -24,13 +24,17 @@ def project_details(request, id):
     request.session['project_id'] = id
     project_details = Projects.objects.get(id=id)
     pictures = Pictures.objects.filter(project=id)
-    for i in pictures:
-        print(i.image)
+
+    print(project_details.category)
+
+    similar_project = Projects.objects.filter(Q(category=project_details.category), ~Q(id = project_details.id))
+    print(similar_project)
 
     context = {
         "project_details": project_details,
         "project_picture": pictures,
         "user_id": request.session['user_id'],
+        "similar_project": similar_project,
 
     }
     return render(request, "project_details.html", context)
@@ -91,10 +95,11 @@ def donate(request, id):
 
 def save(request):
     print("this sa ve rate method")
-    #uid = request.session['user_id']  # uid referes to the session user_id
-    #pid = request.session.get('project_id')
-    p = Projects.objects.get(id=2)
-    x = Projects.objects.get(id=2)
+    uid = request.session['user_id']  # uid referes to the session user_id
+    pid = request.session.get('project_id')
+    p = Projects.objects.get(id=pid)
+    x = Projects.objects.get(id=uid)
+
     ratedindex = request.POST.get('ratedIndex')
     print(ratedindex)
     uID = request.POST.get('user_id')  # uID refers to the local storage user_id
@@ -106,16 +111,16 @@ def save(request):
         u.save()
     else:
         Rates.objects.filter(user=uID).update(rate=ratedindex)
-    return HttpResponse(json.dumps({'uid': 2}), content_type="application/json")
+    return HttpResponse(json.dumps({'uid': uid}), content_type="application/json")
     num_of_rates = Rates.objects.get(id).count()
 
-    # total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
-    # avg = total / num_of_rates
-    # print(avg)
-    # context = {
-    #     'avg': avg,
-    # }
-    # return render(request, "project_details.html", context)
+    total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
+    avg = total / num_of_rates
+    print(avg)
+    context = {
+        'avg': avg,
+    }
+    return render(request, "project_details.html", context)
 
 
 def search(request):
