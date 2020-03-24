@@ -1,7 +1,6 @@
         var ratedIndex = -1, uID = 0;
 
         $(document).ready(function () {
-            
 
             resetStarColors();
 
@@ -56,12 +55,10 @@
                }
             });
         }
-
         function setStars(max) {
             for (var i=0; i <= max; i++)
                 $('.fa-star:eq('+i+')').css('color', 'gold');
         }
-
         function resetStarColors() {
             $('.fa-star').css('color', 'lightgray');
         }

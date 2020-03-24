@@ -21,12 +21,11 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 def project_details(request, id):
-    request.session['user_id'] = 3  # static ,change it to dynamic when merge
+    request.session['user_id'] = 1  # static ,change it to dynamic when merge
     print("****")
     request.session['project_id'] = id
     project_details = Projects.objects.get(id=id)
     pictures = Pictures.objects.filter(project=id)
-
     print(project_details.category)
 
     similar_project = Projects.objects.filter(Q(category=project_details.category), ~Q(id = project_details.id))
@@ -36,11 +35,14 @@ def project_details(request, id):
     project_comments=Comments.objects.filter(project=id)
 
     #canncel project validations
+    p=Projects.objects.filter(id=id)
+    donations=user_donations.objects.filter(project=p)
     donation_amount=user_donations.objects.raw('SELECT id,project_id,sum(Amount) as amt FROM user_donations where project_id=%s GROUP BY project_id',[id])[0].amt
     if(donation_amount < project_details.target*.25):
-        delete=True
+        delete = True
     else:
-        delete=False
+        delete = False
+
     context = {
         "project_details": project_details,
         "project_picture": pictures,
