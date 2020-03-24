@@ -17,6 +17,7 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>-->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/commentsStyle.css' %}">
     <style>
         img{
         width : 50%px;
@@ -28,7 +29,9 @@
     <div align="center"style="height:50px;margin:20px auto;margin-bottom:5px">
     <h5 style="align:center;height:100px;width:200px;color:navy;font:bold">{{project_details.Title}}</h5>
     </div>
-    <div class="col-sm-6" style="align:center;margin:5px auto;">
+<!-- project body -->
+<div style="border:1px solid gray;width:700px;text-align: center;margin: 20px auto;">    
+    <div  style="align:center;">
 
         <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
           <ol class="carousel-indicators">
@@ -60,15 +63,21 @@
  <!--************************************************************************-->
     <div class="card-body"align="center">
     <p class="card-text"style="font-family:tahoma;width:50%;">{{project_details.Details}}</p>
+    <p><b>Target:</b> {{ project_details.target }}</p>
+    <p><b>Donations:</b> {{ donation_amount }}</p>
     </div>
       <!--*********************************************************************************-->
     {% if project_details.user.id != user_id %}
-    <div align="center">
-        <form method="get" action="{{project_details.id}}/edit">
+    <div align="center" style="display: inline;">
+        <form method="get" action="{{project_details.id}}/edit" style="display: inline;">
             {% csrf_token %}
-           <button type="submit" name="submit" class="btn btn-warning">EDIT</button>
+           <button type="submit" name="submit" class="btn btn-success">EDIT</button>
         </form>
     </div>
+    <!-- <button class="btn btn-danger" id="deletePost" style="margin-left: 20px;" value="{{ project_details.id }}">Delete</button> -->
+    {% if deleteValidation %}
+    <a href="/deleteProject/{{ project_details.id }}" class="btn btn-danger" id="deletePost" style="margin-left: 20px;" >Delete</a>
+    {% endif %}
     {% endif %}
 
 <!--rating stars-->
@@ -86,14 +95,73 @@
     <div align="center" style="margin-top:0px;margin-bottom:50px;">
         {% if project_details.user.id != user_id %}
 
-    <form method="get" action="{{project_details.id}}/donate" >
+    <form method="get" action="{{project_details.id}}/donate" style="display: inline;">
         {% csrf_token %}
-       <button type="submit"class="btn btn-success">DONATE</button>
+       <button type="submit" class="btn btn-success">DONATE</button>
 
     </form>
     {% endif %}
+    <button class="btn btn-primary" id="deletePost" style="margin-left: 20px;">Report</button>
     </div>
+</div>
+<!-- project body -->
 
+<!-- comments body -->
+<div class="row" style="width:700px;text-align: center;margin: 20px auto;">
+  <!-- write comment -->
+    <div class="container pb-cmnt-container">
+        <div class="row">
+            <div style="width: 100%;">
+                <div class="card card-info" style="margin: 0 !important;width: 100%">
+                    <div class="card-block">
+                        <form class="form-inline" method="POST" id="add-form" action="/addComment/">
+                          {% csrf_token %} 
+                          <textarea placeholder="Write your comment here!" class="pb-cmnt-textarea"></textarea>
+                          <input type="hidden" name="pid" value="{{ project_details.id }}" id="pid">
+                            <button class="btn btn-primary float-xs-right" type="button" style="margin: 5px;width: 120px;" id="add">Send</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<!-- end write comment -->
+<div id="commentsBody" style="width: 100%;">
+    {% for item in project_comments %}
+    <div style="width: 100%;" >
+        <div class="media g-mb-30 media-comment">
+            <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
+            <div class="media-body u-shadow-v18 g-bg-secondary g-pa-30">
+              <div class="g-mb-15">
+                <h5 class="h5 g-color-gray-dark-v1 mb-0">{{ item.user.first_name }}</h5>
+                <span class="g-color-gray-dark-v4 g-font-size-12">5 days ago</span>
+              </div>
+        
+              <p>{{ item.body }}</p>
+        
+              <ul class="list-inline d-sm-flex my-0">
+                <li class="list-inline-item g-mr-20">
+                  <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
+                    <i>Report</i>
+                    
+                  </a>
+                </li>
+                <li class="list-inline-item ml-auto">
+                  <a class="u-link-v5 g-color-gray-dark-v4 g-color-primary--hover" href="#!">
+                    <i class="fa fa-reply g-pos-rel g-top-1 g-mr-3"></i>
+                    Reply
+                  </a>
+                </li>
+              </ul>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+</div>
+<!-- comments body -->
+
+<!-- similar projects -->
     <!--***************************************************************************-->
     <div id="similar"class = "card-body" align="center" style="margin:10px auto;width:100%;">
         <h2 style="font-family:monospace;background-color:pink;color:blue;">Similar Projects</h2>
@@ -107,12 +175,14 @@
         {% endfor %}
 
     </div>
-</div>
+
 
     <!--***************************************************************************-->
     <script src="http://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
     <script src="{% static 'js/jquery.cookie.js' %}"></script>
     <script src="{% static 'js/rating.js' %}"></script>
+    <script src="{% static 'js/addComment.js' %}"></script>
+    <!-- <script src="{% static 'js/comments.js' %}"></script> -->
 {% endblock %}
 </body>
 </html>
