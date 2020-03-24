@@ -1,5 +1,5 @@
 from Users.forms import UserRegisterForm
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from Projects.models import Rates,Featured_projects
 
@@ -28,7 +28,7 @@ def register(request):
             # username = form.cleaned_data.get('username')
             # messages.success(request, f'Account created for {username}!')
             form.save()
-            return HttpResponse(form)
+            return redirect('/')
         # else:
         #     return HttpResponse("error")
     else:

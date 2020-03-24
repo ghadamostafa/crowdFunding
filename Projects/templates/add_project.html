@@ -1,26 +1,6 @@
-<!-- <<<<<<< HEAD
-<form method="POST">
-    {% csrf_token %}
-    {{ formset.management_form }}
-    {% load bootstrap4 %}
-   {{projectForm}}
-    {% for field in projectForm  %}
-      <div class="col-sm-6">
-        <b>{{ field.label_tag }}</b> - {{ field }}
-      </div>
-    {% endfor %}
-    <button type="submit">
-        add
-    </button>
-</form>
-======= -->
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <!-- Required meta tags-->
-    {% load static %}
-
+{% extends "Users/layout.html" %}
+{% load static %}
+{% block content %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="Colorlib Templates">
@@ -55,13 +35,11 @@
                 </div>
                 <div class="card-body">
 <!--                    {% load crispy_forms_tags %}-->
-<!--                    {% block content %}-->
 <!--                    <form method="post">-->
 <!--                        {% csrf_token %}-->
 <!--                        {{ projectForm|crispy }}-->
 <!--                        <button type="submit" class="btn btn-primary">Add Project</button>-->
 <!--                    </form>-->
-<!--                    {% endblock %}-->
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         {% for field in projectForm %}
@@ -107,8 +85,4 @@
             allowDuplicates: true
         });
     </script>
-
-</body><!-- This templates was made by Colorlib (https://colorlib.com) -->
-
-</html>
-<!-- end document-->
+{% endblock %}

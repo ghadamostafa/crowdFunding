@@ -11,11 +11,13 @@ from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from Users.models import Users
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from Projects.models import Projects, Tags, Pictures, Rates, user_donations,project_tags
 from .models import Categories
 from django.db.models import Q
 from taggit.models import Tag
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 def project_details(request, id):
@@ -92,7 +94,7 @@ def donate(request, id):
         }
         return render(request, "donation.html", context)
 
-
+@csrf_exempt
 def save(request):
     print("this sa ve rate method")
     uid = request.session['user_id']  # uid referes to the session user_id
@@ -111,9 +113,10 @@ def save(request):
         u.save()
     else:
         Rates.objects.filter(user=uID).update(rate=ratedindex)
-    return HttpResponse(json.dumps({'uid': uid}), content_type="application/json")
-    num_of_rates = Rates.objects.get(id).count()
 
+     #return HttpResponse(json.dumps({'uid': uid}), content_type="application/json")
+    return JsonResponse({'uid':2})
+    # num_of_rates = Rates.objects.get(id).count()
     total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
     avg = total / num_of_rates
     print(avg)
@@ -152,8 +155,8 @@ def create_project(request,id):
                 photo = Pictures(project = project,image = image)
                 photo.save()
             form.save_m2m()
-            messages.success(request, "project saved")
-            return HttpResponse("success")
+            messages.success(request,"project saved")
+            return HttpResponse("Welcome")
         else:
             print(form.errors, formset.errors)
     else:

@@ -26,9 +26,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# Access_Control_Allow_Origin=['*']
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'bootstrap4',
     'django_forms_bootstrap',
     'crispy_forms',
@@ -44,6 +46,8 @@ INSTALLED_APPS = [
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -122,6 +126,7 @@ USE_L10N = True
 USE_TZ = True
 # print("##########################")
 # print(BASE_DIR)
+CORS_ORIGIN_ALLOW_ALL=True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'root')
 STATICFILES_DIRS = [
