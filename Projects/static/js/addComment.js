@@ -17,7 +17,6 @@ $('#add').on('click', function(event){
             });
         comment_body=$("textarea").val()
         pid=$("#pid").val()
-
 	$.ajax({
         url : "/addComment/",
         type : "POST", 

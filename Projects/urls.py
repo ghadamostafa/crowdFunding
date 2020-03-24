@@ -9,4 +9,5 @@ urlpatterns = [
     url(r'^(?P<id>\d+)/edit$', views.edit_project, name="edit_project"),
     url(r'^(?P<id>\d+)/donate$', views.donate, name="donate"),
     url('save', views.save, name='save')
+    # url('report', views.reportproject, name='reportProject')
 ]

@@ -39,8 +39,6 @@
         });
         $(this).off();
 		$(this).click(function () {
-			console.log("first ajax second click");
-			console.log($(this).after("div"));
 			$(this).children("div").toggleClass("display-block display-none");
 			});
  });
