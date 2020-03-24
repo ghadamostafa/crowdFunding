@@ -47,6 +47,7 @@ def project_details(request, id):
     else:
         delete=True
         donation_amount=0
+        
     context = {
         "project_details": project_details,
         "project_picture": pictures,

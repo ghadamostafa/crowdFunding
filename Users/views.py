@@ -1,7 +1,8 @@
 from Users.forms import UserRegisterForm
 from django.shortcuts import render,redirect
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 from Projects.models import Rates,Featured_projects,Projects,Categories
+from django.views.decorators.csrf import csrf_exempt
 
 
 def home(request):
@@ -21,6 +22,12 @@ def home(request):
     return render(request, "Users/index.html",
     {"result":result,"featuredProjects":featuredProjects,"latestProjects":latestProjects,"categories":categories})
 
+@csrf_exempt
+def categoryProjects(request):
+    id=request.POST.get('category_id')
+    category=Categories.objects.get(id=id)
+    projects=list(Projects.objects.filter(category=category).values())
+    return JsonResponse(projects,safe=False)
 	
 def register(request):
     if request.method == 'POST':

@@ -98,9 +98,10 @@
       Categories
     </a>
     {% for category in categories %}
-    <a href="#" class="list-group-item list-group-item-action" id="category_id">{{ category.name }}</a>
+    <li class="list-group-item list-group-item-action category_id" value="{{ category.id }}">{{ category.name }}</li>
     {% endfor %}
   </div>
 </section>
+<script type="text/javascript" src="{% static 'Users/js/index.js' %}"></script>
 <!-- end categories list -->
 {% endblock %}
