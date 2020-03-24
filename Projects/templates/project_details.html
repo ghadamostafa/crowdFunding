@@ -100,7 +100,9 @@
 
     </form>
     {% endif %}
-    <button class="btn btn-primary" id="deletecomment" style="margin-left: 20px;">Report</button>
+        <button class="btn btn-info" id="reportProject" style="margin-left: 20px;">Report</button>
+        <input type="hidden" name="reportedid" value="{{ project_details.id }}" id="reportedid">
+
     </div>
 </div>
 <!-- project body -->
@@ -181,6 +183,8 @@
     <script src="{% static 'js/jquery.cookie.js' %}"></script>
     <script src="{% static 'js/rating.js' %}"></script>
     <script src="{% static 'js/addComment.js' %}"></script>
+    <script src="{% static 'js/reportProject.js' %}"></script>
+
     <!-- <script src="{% static 'js/comments.js' %}"></script> -->
 {% endblock %}
 </body>

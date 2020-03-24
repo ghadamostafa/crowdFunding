@@ -20,6 +20,8 @@ urlpatterns = [
     path('addComment/',project_view.addComment),
     path('deleteProject/<int:id>',project_view.deleteProject),
     path('profile/',user_view.profile),
+    path('report/', project_view.reportproject)
+
 ]
 if settings.DEBUG: 
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
