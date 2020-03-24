@@ -39,25 +39,32 @@
     </a>
   </div>
 <!-- End of slider -->
+
 <!-- latest 5 projects -->
+
 <section style="margin-top: 64px;" >
   <h2 style="text-align: left;margin: 20px 100px;" >Latest Projects</h2>
   <div class="container">
     <div class="row">
       <!-- project 1 -->
+      {% for latestProject in latestProjects %}
       <div class="col card" >
        <!-- <div class="card" style="width: 18rem;"> -->
         <img class="card-img-top" src="{% static 'Users/images/photo.png' %}" alt="Card image cap">
         <div class="card-body">
-          <p class="card-text">Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
+          <a href="/project/{{ latestProject.id }}">{{ latestProject.Title }}</a>
+          <p class="card-text">{{ latestProject.Details }}</p>
+          <p><b>Target:</b> {{ latestProject.target }} EGP</p>
         </div>
       <!-- </div> -->
       </div>
+      {% endfor %}
       
   </div>
 </div>
 </section>
 <!-- End latest projects -->
+
 <!-- latest 5 featured projects -->
 <section style="margin-top: 100px;" >
   <h2 style="text-align: left;margin: 20px 100px;" >Latest Featured Projects</h2>
@@ -74,7 +81,7 @@
         <div class="card-body">
           <a href="/project/{{ p.project_id }}">{{ p.project.Title }}</a>
           <p class="card-text">{{ p.project.Details }}</p>
-          <p>Target: {{ p.project.target }} EGP</p>
+          <p><b>Target:</b> {{ p.project.target }} EGP</p>
         </div>
       </div>
       {% endfor %}
@@ -90,10 +97,9 @@
     <a href="#" class="list-group-item list-group-item-action active disabled">
       Categories
     </a>
-    <a href="#" class="list-group-item list-group-item-action">Dapibus ac facilisis in</a>
-    <a href="#" class="list-group-item list-group-item-action">Morbi leo risus</a>
-    <a href="#" class="list-group-item list-group-item-action">Porta ac consectetur ac</a>
-    <a href="#" class="list-group-item list-group-item-action disabled">Vestibulum at eros</a>
+    {% for category in categories %}
+    <a href="#" class="list-group-item list-group-item-action" id="category_id">{{ category.name }}</a>
+    {% endfor %}
   </div>
 </section>
 <!-- end categories list -->

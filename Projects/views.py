@@ -36,11 +36,17 @@ def project_details(request, id):
     project_comments=Comments.objects.filter(project=id)
 
     #canncel project validations
-    donation_amount=user_donations.objects.raw('SELECT id,project_id,sum(Amount) as amt FROM user_donations where project_id=%s GROUP BY project_id',[id])[0].amt
-    if(donation_amount < project_details.target*.25):
-        delete=True
+    p=Projects.objects.get(id=id)
+    donations=user_donations.objects.filter(project=p)
+    if(donations.count() > 0):
+        donation_amount=user_donations.objects.raw('SELECT id,project_id,sum(Amount) as amt FROM user_donations where project_id=%s GROUP BY project_id',[id])[0].amt
+        if(donation_amount < project_details.target*.25):
+            delete=True
+        else:
+            delete=False
     else:
-        delete=False
+        delete=True
+        donation_amount=0
     context = {
         "project_details": project_details,
         "project_picture": pictures,

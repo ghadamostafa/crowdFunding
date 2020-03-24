@@ -1,22 +1,25 @@
 from Users.forms import UserRegisterForm
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from Projects.models import Rates,Featured_projects
+from Projects.models import Rates,Featured_projects,Projects,Categories
 
 
 def home(request):
-	#highest 5 rated projects
-	query='select avg(rate) as rate_avg,Project_Rates.project_id,Project_Rates.id,Projects.title from Project_Rates inner join Projects  on Project_Rates.project_id=Projects.id  group by Project_Rates.Project_id ORDER BY rate_avg DESC LIMIT 5'
-	result=Rates.objects.raw(query)
+    #highest 5 rated projects
+    query='select avg(rate) as rate_avg,Project_Rates.project_id,Project_Rates.id,Projects.title from Project_Rates inner join Projects  on Project_Rates.project_id=Projects.id  group by Project_Rates.Project_id ORDER BY rate_avg DESC LIMIT 5'
+    result=Rates.objects.raw(query)
 
-	#latest 5 featured projects
-	featuredProjects=Featured_projects.objects.all().order_by('-featured_date')[:5]
+    #latest 5 projects
+    latestProjects=Projects.objects.all().order_by('-start_date')[:5]
 
-	#latest 5 projects
+    #latest 5 featured projects
+    featuredProjects=Featured_projects.objects.all().order_by('-featured_date')[:5]
 
-	#list of categories
+    #list of categories
+    categories=Categories.objects.all()
 
-	return render(request, "Users/index.html", {"result":result,"featuredProjects":featuredProjects})
+    return render(request, "Users/index.html",
+    {"result":result,"featuredProjects":featuredProjects,"latestProjects":latestProjects,"categories":categories})
 
 	
 def register(request):
