@@ -87,7 +87,7 @@ DATABASES = {
         'USER': 'root',
         'PASSWORD': '',
         'HOST': 'localhost',
-        'PORT': '3306',
+        'PORT': '3308',
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
         }
@@ -127,22 +127,20 @@ USE_TZ = True
 # print("##########################")
 # print(BASE_DIR)
 CORS_ORIGIN_ALLOW_ALL=True
-STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'root')
-STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static'),
-        '/var/www/static/',
-]
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 MEDIA_URL = '/media/'
-
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
+ROOT_PATH = os.path.dirname(__file__)
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'root')
 # STATIC_ROOT = os.path.join(BASE_DIR, 'root')
 STATICFILES_DIRS = [
         os.path.join(BASE_DIR, 'static'),
+        os.path.join(ROOT_PATH, 'static'),
+        '/var/www/static/',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

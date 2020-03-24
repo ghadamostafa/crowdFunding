@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,redirect
 from django.shortcuts import get_object_or_404
 # connect  view with form
 from .forms import ProjectForm, DonationForm, RatingForm
@@ -12,7 +12,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from Users.models import Users
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from Projects.models import Projects, Tags, Pictures, Rates, user_donations,project_tags
+from Projects.models import Projects, Tags, Pictures, Rates, user_donations,project_tags,Comments
 from .models import Categories
 from django.db.models import Q
 from taggit.models import Tag
@@ -32,16 +32,47 @@ def project_details(request, id):
     similar_project = Projects.objects.filter(Q(category=project_details.category), ~Q(id = project_details.id))
     print(similar_project)
 
+    #get comments 
+    project_comments=Comments.objects.filter(project=id)
+
+    #canncel project validations
+    donation_amount=user_donations.objects.raw('SELECT id,project_id,sum(Amount) as amt FROM user_donations where project_id=%s GROUP BY project_id',[id])[0].amt
+    if(donation_amount < project_details.target*.25):
+        delete=True
+    else:
+        delete=False
     context = {
         "project_details": project_details,
         "project_picture": pictures,
         "user_id": request.session['user_id'],
         "similar_project": similar_project,
-
+        "project_comments": project_comments,
+        "deleteValidation":delete,
+        "donation_amount":donation_amount,
     }
+    
     return render(request, "project_details.html", context)
 
+@csrf_exempt
+def addComment(request):
+    #uid come from session
+    uid=2
+    id=request.POST.get('pid')
+    print(id)
+    comment_body=request.POST.get('comment_body')
+    print(comment_body)
+    user=Users.objects.get(id=uid)
+    project=Projects.objects.get(id=id)
+    comment=Comments.objects.create(body=comment_body,user=user,project=project)
+    return JsonResponse ({"comment_body":comment_body,"user_name":user.first_name,"user_id":uid})
 
+def deleteProject(request,id):
+    # pid=request.POST.get('project_id')
+    Projects.objects.filter(id=id).delete()
+    return redirect('/profile/')
+
+
+    
 def edit_project(request, id):
     project = get_object_or_404(Projects, id=id)
     print(request.method)
@@ -117,13 +148,13 @@ def save(request):
      #return HttpResponse(json.dumps({'uid': uid}), content_type="application/json")
     return JsonResponse({'uid':2})
     # num_of_rates = Rates.objects.get(id).count()
-    total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
-    avg = total / num_of_rates
-    print(avg)
-    context = {
-        'avg': avg,
-    }
-    return render(request, "project_details.html", context)
+    # total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
+    # avg = total / num_of_rates
+    # print(avg)
+    # context = {
+    #     'avg': avg,
+    # }
+    # return render(request, "project_details.html", context)
 
 
 def search(request):
@@ -135,9 +166,9 @@ def search(request):
 		projects=item.project_tags_set.all()
 		for p in projects:
 			l.append(p.project)
-	# Tags.objects.filter(Q(name__icontains='physics' ))[0].project_tags_set.all()[0].project.Title
 	res=set(l+list(titleSearch))
 	return render(request, "Users/SearchResult.html",{"result":res})
+
 
 def create_project(request,id):
     ImageFormSet = modelformset_factory( Pictures , form=ImageForm,extra=4)
@@ -156,7 +187,7 @@ def create_project(request,id):
                 photo.save()
             form.save_m2m()
             messages.success(request,"project saved")
-            return HttpResponse("Welcome")
+            return redirect("/profile/")
         else:
             print(form.errors, formset.errors)
     else:
