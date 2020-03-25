@@ -10,13 +10,15 @@ from django import forms
 from django.forms.models import modelformset_factory
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from Users.models import Users
+from Users.models import Profile
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from Projects.models import Projects, Tags, Pictures, Rates, user_donations, project_tags, Comments
 from .models import Categories
 from django.db.models import Q
 from taggit.models import Tag
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+
 
 
 def project_details(request, id):
@@ -64,12 +66,12 @@ def project_details(request, id):
 @csrf_exempt
 def addComment(request):
     # uid come from session
-    uid = 3
+    uid = 2
     id = request.POST.get('pid')
     print(id)
     comment_body = request.POST.get('comment_body')
     print(comment_body)
-    user = Users.objects.get(id=uid)
+    user = User.objects.get(id=uid)
     project = Projects.objects.get(id=id)
     comment = Comments.objects.create(body=comment_body, user=user, project=project)
     return JsonResponse({"comment_body": comment_body, "user_name": user.first_name, "user_id": uid})
@@ -92,6 +94,7 @@ def edit_project(request, id):
             print(project.user)
             new_form.user = project.user
             new_form.save()
+            return redirect("/project/"+id)
     else:
         form = ProjectForm(instance=project)
         print("else")
@@ -104,7 +107,7 @@ def edit_project(request, id):
 
 def donate(request, id):
     project = get_object_or_404(Projects, id=id)
-    user = get_object_or_404(Users, id=1)  # edit to id = id from session (login user)
+    user = get_object_or_404(User, id=1)  # edit to id = id from session (login user)
     donation_before = user_donations.objects.filter(user=1, project=id)
     if not donation_before:
         print("new one")
@@ -114,6 +117,7 @@ def donate(request, id):
                 new_form = form.save(commit=False)
                 new_form.user = user
                 new_form.save()
+            return redirect("/project/"+id)
         else:
             form = DonationForm(initial={'project': project, 'user': user})
         context = {
@@ -126,6 +130,7 @@ def donate(request, id):
             form = DonationForm(request.POST)
             n = int(request.POST['Amount']) + int(old_amount)
             user_donations.objects.filter(user=request.POST['user'], project=request.POST['project']).update(Amount=n)
+            return redirect("/project/"+id)
         else:
             form = DonationForm(initial={'project': project, 'user': user})
         context = {
@@ -192,7 +197,7 @@ def create_project(request, id):
         formset = ImageFormSet(request.POST, request.FILES, queryset=Pictures.objects.none())
         if form.is_valid() and formset.is_valid():
             project = form.save(commit=False)
-            project.user = Users.objects.get(id=id)
+            project.user = User.objects.get(id=id)
             project.save()
             tag = Tags.objects.create(name=form.cleaned_data.get('tags'))
             ProjectTags = project_tags.objects.create(tag=tag, project=project)

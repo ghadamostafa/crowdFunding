@@ -1,5 +1,5 @@
 from django.db import models
-from Users.models import Users
+from django.contrib.auth.models import User
 from django.utils import timezone
 
 
@@ -16,10 +16,10 @@ class Projects(models.Model):
 	start_date=models.DateField(auto_now=False, auto_now_add=False , default=timezone.now)
 	end_date=models.DateField(auto_now=False, auto_now_add=False)
 	report=models.IntegerField(null=True)
-	user=models.ForeignKey(Users,on_delete=models.CASCADE,related_name='UserID')
+	user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='UserID')
 	category=models.ForeignKey('Categories', on_delete=models.CASCADE,null=True)
 	tags = models.ManyToManyField('Tags', through='project_tags')
-	donations=models.ManyToManyField(Users, through='user_donations',related_name='UserDonations')
+	donations=models.ManyToManyField(User, through='user_donations',related_name='UserDonations')
 	class Meta:
 		db_table = "Projects"
 	def __str__(self):
@@ -30,7 +30,7 @@ class Pictures(models.Model):
 	id=models.AutoField(primary_key=True)
 	project = models.ForeignKey(Projects,on_delete=models.CASCADE,null=True)
 	image=models.ImageField(upload_to='media/images/projects',verbose_name="image",null=True)
-	user_id=models.ForeignKey(Users, on_delete=models.CASCADE,null=True)
+	user_id=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
 	# project_Id=models.ForeignKey(Projects, on_delete=models.CASCADE,null=True)
 	
 	class Meta:
@@ -48,7 +48,7 @@ class Tags(models.Model):
 class Rates(models.Model):
 	rate=models.DecimalField(max_digits=3,decimal_places=1)
 	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
-	user=models.ForeignKey(Users,on_delete=models.CASCADE)
+	user=models.ForeignKey(User,on_delete=models.CASCADE)
 	class Meta:
 		db_table = "Project_Rates"
 	def __str__(self):
@@ -59,7 +59,7 @@ class Comments(models.Model):
 	body=models.TextField()
 	report=models.IntegerField(null=True)
 	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
-	user=models.ForeignKey(Users,on_delete=models.CASCADE)
+	user=models.ForeignKey(User,on_delete=models.CASCADE)
 	class Meta:
 		db_table = "Project_Comments"
 	def __str__(self):
@@ -75,7 +75,7 @@ class project_tags(models.Model):
 
 
 class user_donations(models.Model):
-	user =models.ForeignKey(Users,on_delete=models.CASCADE)
+	user =models.ForeignKey(User,on_delete=models.CASCADE)
 	project =models.ForeignKey('Projects',on_delete=models.CASCADE)
 	Amount =models.IntegerField()
 	class Meta:

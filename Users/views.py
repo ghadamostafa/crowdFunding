@@ -3,6 +3,8 @@ from django.shortcuts import render,redirect
 from django.http import HttpResponse,JsonResponse
 from Projects.models import Rates,Featured_projects,Projects,Categories
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
+from Users.models import Profile
 
 
 def home(request):
@@ -33,14 +35,14 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
         if form.is_valid():
-            form.save(commit=False)
-            form.photo = form.cleaned_data.get('Img')
-            # username = form.cleaned_data.get('username')
-            # messages.success(request, f'Account created for {username}!')
-            form.save()
+            user=form.save()
+            user.refresh_from_db() 
+            username = form.cleaned_data.get('username')
+            user.profile.phone = form.cleaned_data.get('phone')
+            user.profile.Img = form.cleaned_data.get('Img') 
+            user.save()
+            messages.success(request, f'Account created for {username}!')
             return redirect('/')
-        # else:
-        #     return HttpResponse("error")
     else:
         form = UserRegisterForm()
     return render(request, 'Users/register.html', {'form': form})
