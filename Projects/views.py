@@ -47,6 +47,14 @@ def project_details(request, id):
     else:
         delete = True
         donation_amount = 0
+
+    num_of_rates = Rates.objects.filter(project=p).count()
+    print("num_of_rates")
+    print(num_of_rates)
+    total = Rates.objects.filter(project=p).aggregate(Sum('rate'))
+    print("total", total)
+    avg = total.get('rate__sum') / num_of_rates
+    print(avg)
     context = {
         "project_details": project_details,
         "project_picture": pictures,
@@ -55,6 +63,7 @@ def project_details(request, id):
         "project_comments": project_comments,
         "deleteValidation": delete,
         "donation_amount": donation_amount,
+        "avg": avg,
     }
 
     return render(request, "project_details.html", context)
@@ -125,6 +134,7 @@ def donate(request, id):
             form = DonationForm(request.POST)
             n = int(request.POST['Amount']) + int(old_amount)
             user_donations.objects.filter(user=request.POST['user'], project=request.POST['project']).update(Amount=n)
+
         else:
             form = DonationForm(initial={'project': project, 'user': user})
         context = {
@@ -139,35 +149,37 @@ def save(request):
     uid = request.session['user_id']  # uid referes to the session user_id
     pid = request.session.get('project_id')
     p = Projects.objects.get(id=pid)
-    x = Projects.objects.get(id=uid)
+    u = Users.objects.get(id=uid)
+    print("x", u.id)
+    print("p",p.id)
 
     ratedindex = request.POST.get('ratedIndex')
     print(ratedindex)
     uID = request.POST.get('user_id')  # uID refers to the local storage user_id
-    ratedindex += 1
+    ratedindex =int(ratedindex)+ 1
     if uID != 0:
-        u = Rates(rate=ratedindex)
-        u.user = x
-        u.project = p
-        u.save()
+        Rates.objects.create(rate=int(ratedindex), project=p, user=u)
+    # when i use project=p.id,or user=u.id it give:ValueError: Cannot assign "3": "Rates.user" must be a "Users"instance
+    # ,what is mean that x&p must be an object of class because they are here foreign keys
     else:
-        Rates.objects.filter(user=uID).update(rate=ratedindex)
-
-    # return HttpResponse(json.dumps({'uid': uid}), content_type="application/json")
-    return JsonResponse({'uid': 2})
-    # num_of_rates = Rates.objects.get(id).count()
-    # total = Rates.objects.filter(id=uID).aggregate(Sum('rate'))
-    # avg = total / num_of_rates
-    # print(avg)
-    # context = {
-    #     'avg': avg,
-    # }
-    # return render(request, "project_details.html", context)
+        Rates.objects.filter(user=uid).update(rate=ratedindex)
+    num_of_rates = Rates.objects.filter(project=p).count()
+    print("num_of_rates")
+    print(num_of_rates)
+    total = Rates.objects.filter(project=p).aggregate(Sum('rate'))
+    print("total", total)
+    avg = total.get('rate__sum') / num_of_rates
+    print(avg)
+    return JsonResponse({'uid': uid,'avg':round(avg,2)})
+    # return HttpResponse(json.dumps({'uid': uid,'avg':avg}), content_type="application/json")
 
 
 def reportproject(request):
     print("in view in report fun")
     id = request.POST.get('reportedid')
+    prev_report = (Projects.objects.filter(id=id))[0].report
+    Projects.objects.filter(id=id).update(report=int(prev_report)+1)
+    Projects.object.filter(id=id, report__gt=5).delete()
     return JsonResponse({'affected': id})
 
 

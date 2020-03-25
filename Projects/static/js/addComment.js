@@ -1,5 +1,4 @@
-
- $(document).ready(function () {
+$(document).ready(function () {
  	console.log("ready");
 
 $('#add').on('click', function(event){

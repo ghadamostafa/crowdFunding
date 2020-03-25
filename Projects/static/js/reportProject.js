@@ -1,6 +1,6 @@
  $(document).ready(function () {
     $('#reportProject').on('click', function(event){
-        console.log("add report");
+          console.log("add report");
           var csrftoken = $.cookie('csrftoken');
                 function csrfSafeMethod(method) {
                     return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
@@ -12,8 +12,8 @@
                         }
                     }
                 });
-            projectid=$("#reportedid").val()
-            $.ajax({
+//           projectid=$("reportedid").val();
+           $.ajax({
                    url: "/report/",
                    method: "POST",
                    data: {
@@ -21,14 +21,13 @@
                       'projectid':reportedid
                    },
                    success: function (jason) {
-                        console.log("success");
+//                        console.log("success");
                    },
                    // handle a non-successful response
-        error : function(xhr,errmsg,err) {
-
-            console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-        }
-
+                     error : function(xhr,errmsg,err) {
+                    console.log(xhr.status + ": " + xhr.responseText);
+                    // provide a bit more info about the error to the console
+                     }
                 });
  });
 });
