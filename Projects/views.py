@@ -53,8 +53,10 @@ def project_details(request, id):
     print(num_of_rates)
     total = Rates.objects.filter(project=p).aggregate(Sum('rate'))
     print("total", total)
-    avg = total.get('rate__sum') / num_of_rates
-    print(avg)
+    if total.get('rate__sum') != 'None':
+        avg = total.get('rate__sum') / num_of_rates
+        print(avg)
+
     context = {
         "project_details": project_details,
         "project_picture": pictures,
@@ -173,13 +175,13 @@ def save(request):
     return JsonResponse({'uid': uid,'avg':round(avg,2)})
     # return HttpResponse(json.dumps({'uid': uid,'avg':avg}), content_type="application/json")
 
-
+@csrf_exempt
 def reportproject(request):
     print("in view in report fun")
     id = request.POST.get('reportedid')
     prev_report = (Projects.objects.filter(id=id))[0].report
     Projects.objects.filter(id=id).update(report=int(prev_report)+1)
-    Projects.object.filter(id=id, report__gt=5).delete()
+    Projects.objects.filter(id=id, report__gt=5).delete()
     return JsonResponse({'affected': id})
 
 

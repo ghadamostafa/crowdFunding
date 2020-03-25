@@ -16,11 +16,14 @@
 		{% for i in result %}
 		    {% if forloop.first %}<div class="row">{% endif %}
 		    <div class="col-lg-3 card" style="margin-top: 20px;margin-right: 30px;">
-		    		<img class="card-img-top" src="{% static 'Users/images/photo.png' %}" alt="Card image cap">
+		    		  {% with i.pictures_set.all|first as imageobj %}
+			        	<a href="/project/{{ item.project_id }}">
+			          	<img class="d-block w-100" src="{% if imageobj.image %}{{ imageobj.image.url }}{% endif %}" ></a>
+			          {% endwith %}
 		    		<div class="card-body">
 			          <a href="/project/{{ i.id }}">{{ i.Title }}</a>
 			          <p class="card-text">{{ i.Details }}</p>
-			          <p>Target: {{ i.target }} EGP</p>
+			          <p><b>Target:</b> {{ i.target }} EGP</p>
 			        </div>
 		    </div>
 		    {% if forloop.counter|divisibleby:3 %}</div><div class="row">{% endif %}

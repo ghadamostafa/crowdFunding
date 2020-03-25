@@ -46,9 +46,9 @@ class Tags(models.Model):
 
 
 class Rates(models.Model):
-	rate=models.DecimalField(max_digits=3,decimal_places=1)
-	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
-	user=models.ForeignKey(Users,on_delete=models.CASCADE)
+	rate=models.DecimalField(max_digits=3, decimal_places=1, default=1)
+	project=models.ForeignKey('Projects', on_delete=models.CASCADE)
+	user=models.ForeignKey(Users, on_delete=models.CASCADE)
 	class Meta:
 		db_table = "Project_Rates"
 	def __str__(self):
