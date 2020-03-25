@@ -165,7 +165,7 @@ def save(request):
     # }
     # return render(request, "project_details.html", context)
 
-
+@csrf_exempt
 def reportproject(request):
     print("in view in report fun")
     id = request.POST.get('reportedid')
