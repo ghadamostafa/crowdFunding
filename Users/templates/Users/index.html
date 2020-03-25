@@ -23,7 +23,7 @@
           {% endwith %}
         <div class="carousel-caption d-none d-md-block">
           <h5>{{ item.title }}</h5>
-          <p style="color: green;">Donate now</p>
+          <!-- <p style="color: green;">Donate now</p> -->
         </div>
       </div>
       {% endfor %}
@@ -50,7 +50,10 @@
       {% for latestProject in latestProjects %}
       <div class="col card" >
        <!-- <div class="card" style="width: 18rem;"> -->
-        <img class="card-img-top" src="{% static 'Users/images/photo.png' %}" alt="Card image cap">
+       {% with latestProject.pictures_set.all|first as imageobj %}
+        <img class="card-img-top" 
+        src="{% if imageobj.image %}{{ imageobj.image.url }}{% endif %}" alt="Card image cap">
+        {% endwith %}
         <div class="card-body">
           <a href="/project/{{ latestProject.id }}">{{ latestProject.Title }}</a>
           <p class="card-text">{{ latestProject.Details }}</p>
