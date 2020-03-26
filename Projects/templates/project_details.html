@@ -88,12 +88,14 @@
         <i class="fa fa-star fa-2x" data-index="3"></i>
         <i class="fa fa-star fa-2x" data-index="4"></i>
         <br><br>
-        {{ avg|floatformat }}
     </div>
     <!--end of rating stars-->
     <div align="center" style="margin-top:0px;margin-bottom:50px;">
         {% if project_details.user.id != user_id %}
+        <div style="margin-top:0px;margin-bottom:20px;">
+            <h5 id="avg" class="h5 g-color-gray-dark-v1 mb-0 mt-0" style="color:navy;">{{avg|floatformat}}</h5>
 
+        </div>
     <form method="get" action="{{project_details.id}}/donate" style="display: inline;">
         {% csrf_token %}
        <button type="submit" class="btn btn-success">DONATE</button>
@@ -180,8 +182,8 @@
     <script src="http://code.jquery.com/jquery-3.4.0.min.js" integrity="sha256-BJeo0qm959uMBGb65z40ejJYGSgR7REI4+CW1fNKwOg=" crossorigin="anonymous"></script>
     <script src="{% static 'js/jquery.cookie.js' %}"></script>
     <script src="{% static 'js/rating.js' %}"></script>
-    <script src="{% static 'js/addComment.js' %}"></script>
     <script src="{% static 'js/reportProject.js' %}"></script>
+    <script src="{% static 'js/addComment.js' %}"></script>
 
     <!-- <script src="{% static 'js/comments.js' %}"></script> -->
 {% endblock %}

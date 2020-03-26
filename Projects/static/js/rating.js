@@ -13,6 +13,7 @@
                ratedIndex = parseInt($(this).data('index'));
                localStorage.setItem('ratedIndex', ratedIndex);
                saveToTheDB();
+//               $(#avg).innerText(`${avg}`)
             });
 
             $('.fa-star').mouseover(function () {
@@ -52,6 +53,7 @@
                success: function (r) {
                     uID = r.id;
                     localStorage.setItem('user_id', uID);
+                    avg=r.avg;
                }
             });
         }

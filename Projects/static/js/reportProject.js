@@ -1,4 +1,5 @@
  $(document).ready(function () {
+
     $("#reportProject").on('click', function(event){
         console.log("add report");
           var csrftoken = $.cookie('csrftoken');
@@ -19,6 +20,7 @@
                    method: "POST",
                    data: {'reportedid':reportedid},
                    success: function (jason) {
+
                         console.log(jason);
                    },
                     error : function(xhr,errmsg,err) {
@@ -29,5 +31,4 @@
                 });
  });
 });
-// var atLeastOneIsChecked = $('input[name="projectchk"]:checked').length > 0;
 
