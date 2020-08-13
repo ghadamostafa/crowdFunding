@@ -20,10 +20,3 @@ def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
-
-# class User_optional_Info(models.Model):
-	
-# 	user=models.ForeignKey(User,on_delete=models.CASCADE)
-# 	class Meta:
-# 		db_table = "User_optional_Info"
-

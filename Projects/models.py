@@ -16,6 +16,8 @@ class Projects(models.Model):
 	start_date=models.DateField(auto_now=False, auto_now_add=False , default=timezone.now)
 	end_date=models.DateField(auto_now=False, auto_now_add=False)
 	report=models.IntegerField(null=True)
+	is_featured=models.BooleanField(default=False)
+	featured_date=models.DateTimeField(auto_now=False, auto_now_add=False)
 	user=models.ForeignKey(User,on_delete=models.CASCADE,related_name='UserID')
 	category=models.ForeignKey('Categories', on_delete=models.CASCADE,null=True)
 	tags = models.ManyToManyField('Tags', through='project_tags')
@@ -31,8 +33,6 @@ class Pictures(models.Model):
 	project = models.ForeignKey(Projects,on_delete=models.CASCADE,null=True)
 	image=models.ImageField(upload_to='media/images/projects',verbose_name="image",null=True)
 	user_id=models.ForeignKey(User, on_delete=models.CASCADE,null=True)
-	# project_Id=models.ForeignKey(Projects, on_delete=models.CASCADE,null=True)
-	
 	class Meta:
 		db_table = "Project_Pictures"
 
@@ -83,11 +83,4 @@ class user_donations(models.Model):
 		unique_together =['user', 'project']
 		db_table = "User_Donations"
 
-
-class Featured_projects(models.Model):
-	featured=models.BooleanField()
-	featured_date=models.DateTimeField(default=timezone.now,auto_now=False, auto_now_add=False)
-	project=models.ForeignKey('Projects',on_delete=models.CASCADE)
-	def __str__(self):
-		return self.project.Title
 
